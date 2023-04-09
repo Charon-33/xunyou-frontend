@@ -127,6 +127,7 @@ const onSubmit = async () => {
     // 将修改后的tag添加到当前的tags
     if (editUser.value.editKey === 'tags' && newTag.value) {
         let tagsAdd = JSON.parse(editUser.value.currentValue);
+        newTag.value = newTag.value.toLowerCase()
         tagsAdd.push(newTag.value)
         editUser.value.currentValue = JSON.stringify(tagsAdd)
         newTag.value = "";

@@ -22,7 +22,7 @@ const routes = [
     { path: '/team/add', title: '创建队伍', component: TeamAddPage },
     { path: '/team/update', title: '更新队伍', component: TeamUpdatePage },
     { path: '/user', title: '个人信息', component: UserPage },
-    { path: '/search', title: '找伙伴', component: SearchPage },
+    { path: '/search', title: '搜索', component: SearchPage },
     { path: '/user/list', title: '用户列表', component: SearchResultPage },
     { path: '/user/edit', title: '编辑信息', component: UserEditPage },
     { path: '/user/login', title: '登录', component: UserLoginPage },
