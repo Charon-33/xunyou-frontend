@@ -41,7 +41,7 @@ const userTagsList = ref([]);
 const teamList = ref([]);
 let active = ref("user");
 let loading = ref(true);
-let showLoading = ref(true)
+let showLoading = ref(false)
 
 const change = async ()=>{
     console.log("搜索的内容：",searchText.value)

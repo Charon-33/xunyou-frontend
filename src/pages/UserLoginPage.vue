@@ -26,7 +26,7 @@
       />
       <div style="margin-left: 15px; margin-top: 5px">
         <img id="checkCodeImg" @click="changeCode()" :src="getVerifyCode" style="width: 100px; margin-right: 10px" alt="点击刷新验证码">
-        <van-icon v-if="isCorrectCode === 'true'" size="2rem" name="https://s2.loli.net/2023/04/08/GxpXHcSfsynQ6Ez.png" />
+        <van-icon v-if="isCorrectCode === 'true'" size="2rem" :name="correctImg" />
       </div>
 
     </van-cell-group>
@@ -48,6 +48,7 @@ import {useRoute, useRouter} from "vue-router";
 import {onMounted, ref} from "vue";
 import myAxios from "../plugins/myAxios";
 import {Toast} from "vant";
+import correctImg from "../assets/correct.png"
 
 const router = useRouter();
 const route = useRoute();
