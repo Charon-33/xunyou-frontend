@@ -13,14 +13,14 @@ import TeamAddPage from "../pages/TeamAddPage.vue";
 import TeamUpdatePage from "../pages/TeamUpdatePage.vue";
 import UserRegisterPage from "../pages/UserRegisterPage.vue";
 import UserRecInfoPage from "../pages/UserRecInfoPage.vue";
-import TeamUserInfo from "../pages/TeamUserInfo.vue";
-
+import TeamDetails from "../pages/TeamDetails.vue";
 
 const routes = [
     { path: '/', component: Index },
     { path: '/team', title: '找队伍', component: Team },
     { path: '/team/add', title: '创建队伍', component: TeamAddPage },
     { path: '/team/update', title: '更新队伍', component: TeamUpdatePage },
+    { path: '/team/teamDetails', title: '队伍详情', component: TeamDetails },
     { path: '/user', title: '个人信息', component: UserPage },
     { path: '/search', title: '搜索', component: SearchPage },
     { path: '/user/list', title: '用户列表', component: SearchResultPage },
@@ -31,7 +31,6 @@ const routes = [
     { path: '/user/team/create', title: '创建队伍', component: UserTeamCreatePage },
     { path: '/user/register', title: '注册与登录', component: UserRegisterPage },
     { path: '/user/recInfo', title: '用户详情', component: UserRecInfoPage },
-    { path: '/teamUserInfo', title: '队伍中的用户', component: TeamUserInfo },
 ]
 
 export default routes;

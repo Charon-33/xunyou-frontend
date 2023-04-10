@@ -6,6 +6,7 @@ import Vant from 'vant';
 import 'vant/lib/index.css';
 import '../global.css';
 import { Uploader } from 'vant';
+import { Swipe, SwipeItem } from 'vant';
 
 const app = createApp(App);
 app.use(Vant);
@@ -18,4 +19,6 @@ const router = VueRouter.createRouter({
 
 app.use(router);
 app.use(Uploader);
+app.use(Swipe);
+app.use(SwipeItem);
 app.mount('#app')
