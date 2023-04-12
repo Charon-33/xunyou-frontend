@@ -1,6 +1,6 @@
 <template>
     <van-form @submit="onSubmit">
-        <div v-if="editUser.editName !== '性别' && editUser.editName !== '标签'">
+        <div v-if="editUser.editName !== '性别' && editUser.editName !== '标签' && editUser.editName !== '密码'">
             <van-field
                     v-model="editUser.currentValue"
                     :name="editUser.editKey"
@@ -26,6 +26,12 @@
                 </van-tag>
             </div>
         </div>
+        <div v-if="editUser.editName === '密码'" style="margin: 10px;">
+            <van-field v-model="oldPwd" label="原密码：" type="password" placeholder="请输入原密码" @change="conOldPwd"/>
+            <van-field v-model="newPwd" label="新密码：" type="password" placeholder="请输入新密码"/>
+            <van-field v-model="conNewPwd" label="确认新密码：" type="password" placeholder="请再次输入新密码"
+                       @change="fun_conNewPwd"/>
+        </div>
         <!--    <div v-if="editUser.editName === '头像'">-->
         <!--      <span>请上传新的头像：</span>-->
         <!--      <van-uploader v-model="fileList" multiple :max-count="1" />-->
@@ -34,7 +40,12 @@
         <!--      />-->
         <!--    </div>-->
         <div style="margin: 16px;" v-if="editUser.editName !== '标签'">
-            <van-button round block type="primary" native-type="submit">
+            <div v-if="editUser.editName === '密码'">
+                <van-button plain hairline round block type="primary" style="margin-bottom: 10px" to="/user/forgetPwd">
+                    忘记原密码？
+                </van-button>
+            </div>
+            <van-button round block :disabled = noConfirm type="primary" native-type="submit">
                 确认
             </van-button>
         </div>
@@ -43,7 +54,7 @@
 
 <script setup lang="ts">
 import {useRoute, useRouter} from "vue-router";
-import {onMounted, ref} from "vue";
+import {onBeforeMount, onMounted, ref} from "vue";
 import myAxios from "../plugins/myAxios";
 import {Toast} from "vant";
 import {getCurrentUser} from "../services/user";
@@ -57,8 +68,13 @@ const editUser = ref({
     editName: route.query.editName,
 })
 
-let newTag = ref('');
-let checked = ref('');
+let newTag = ref("");
+let checked = ref("");
+
+let oldPwd = ref("")
+let newPwd = ref("")
+let conNewPwd = ref("")
+let noConfirm = ref(false)
 
 onMounted(() => {
     if (editUser.value.editName === '性别') {
@@ -69,7 +85,25 @@ onMounted(() => {
         }
         checked.value = editUser.value.currentValue;
     }
+    if (editUser.value.editName === '密码') {
+        noConfirm.value = true
+    }
 })
+
+const conOldPwd = () => {
+    if (oldPwd.value !== editUser.value.editName) {
+        Toast.fail('原密码输入错误！');
+        noConfirm.value = true
+    }
+}
+const fun_conNewPwd = () => {
+    if (newPwd.value !== conNewPwd.value) {
+        Toast.fail('两次新密码输入不一致！');
+        noConfirm.value = true
+    }else if(oldPwd.value === editUser.value.editName){
+        noConfirm.value = false
+    }
+}
 
 const fileList = ref([
     // { url: editUser.value.currentValue },
@@ -126,11 +160,23 @@ const onSubmit = async () => {
 
     // 将修改后的tag添加到当前的tags
     if (editUser.value.editKey === 'tags' && newTag.value) {
-        let tagsAdd = JSON.parse(editUser.value.currentValue);
+        console.log("新标签：", newTag.value)
+        let tagsAdd;
+        if (editUser.value.currentValue === null) {
+            editUser.value.currentValue = ""
+            tagsAdd = []
+        } else {
+            tagsAdd = JSON.parse(editUser.value.currentValue);
+        }
         newTag.value = newTag.value.toLowerCase()
         tagsAdd.push(newTag.value)
         editUser.value.currentValue = JSON.stringify(tagsAdd)
         newTag.value = "";
+    }
+
+    // 将修改后的密码赋值给当前的value
+    if (editUser.value.editKey === 'userPassword') {
+        editUser.value.currentValue = conNewPwd.value
     }
 
     // 将信息传给后端执行更新
@@ -141,12 +187,12 @@ const onSubmit = async () => {
     })
     // console.log(res, '更新请求');
     if (res.code === 0 && res.data > 0) {
-        if(editUser.value.editName !== '标签'){
+        if (editUser.value.editName !== '标签') {
             Toast.success('修改成功');
             router.back();
         }
     } else {
-        Toast.fail('修改错误');
+        Toast.fail('修改失败');
     }
 };
 

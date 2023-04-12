@@ -1,9 +1,9 @@
 <template>
     <van-image
             width="100%"
-            height="10rem"
+            height="13rem"
             fit="cover"
-            src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
+            :src="teamBg"
     />
     <div style="transform: translateY( -60px)">
         <div style="text-align: center; margin: 5px">
@@ -12,7 +12,7 @@
                     width="7rem"
                     height="7rem"
                     fit="cover"
-                    src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
+                    :src="ikun"
             />
         </div>
         <div style="text-align: center; margin: 10px; font-size: 1.5rem">
@@ -95,6 +95,8 @@ import {getCurrentUser} from "../services/user";
 import {TeamType} from "../models/team";
 import {Toast} from "vant";
 import {teamStatusEnum} from "../constants/team";
+import teamBg from "../assets/teamBg.png"
+import ikun from "../assets/ikun.png"
 
 const route = useRoute();
 let teamDetails = ref([])
@@ -198,7 +200,6 @@ const doQuitTeam = async (id: number) => {
     } else {
         Toast.fail('操作失败' + (res.description ? `，${res.description}` : ''));
     }
-    router.back()
 }
 
 /**

@@ -8,6 +8,7 @@ export const getCurrentUser = async () => {
     // }
     // 不存在则从远程获取
     const res = await myAxios.get('/user/current');
+    // console.log("当前的用户数据：", res)
     if (res.code === 0) {
 
         if(res.data.gender == 0){

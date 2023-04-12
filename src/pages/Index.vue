@@ -12,7 +12,7 @@
         <van-swipe-item>广告位招租</van-swipe-item>
     </van-swipe>
 
-    <van-cell center title="根据您设置的标签，以下是与您相匹配的伙伴哦！">
+    <van-cell center title="根据您设置的标签，以下是与您相匹配的10位伙伴哦！">
         <template #right-icon>
             <van-switch v-model="isMatchMode" size="24"/>
         </template>

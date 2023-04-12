@@ -3,7 +3,7 @@
         width="100%"
         height="10rem"
         fit="cover"
-        src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
+        :src="userBg"
     />
     <div v-if="user" style="transform: translateY( -60px)">
         <div style="text-align: center; margin: 5px">
@@ -16,7 +16,7 @@
             />
         </div>
         <van-cell title="昵称" :value="user.username"/>
-        <van-cell title="账号" :value="user.userAccount"/>
+        <van-cell title="账号" :value="user.id"/>
         <van-cell title="性别" :value="user.gender"/>
         <van-cell title="电话" :value="user.phone"/>
         <van-cell title="邮箱" :value="user.email"/>
@@ -35,6 +35,7 @@ import {onMounted, ref} from "vue";
 import {useRoute} from "vue-router";
 import myAxios from "../plugins/myAxios";
 import moment from "moment/moment";
+import userBg from "../assets/userBg.jpg"
 
 const route = useRoute();
 

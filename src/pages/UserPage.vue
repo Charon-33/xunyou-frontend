@@ -3,7 +3,7 @@
             width="100%"
             height="10rem"
             fit="cover"
-            src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
+            :src="userBg"
     />
     <div v-if="user" style="transform: translateY( -60px)">
         <div style="text-align: center; margin: 5px">
@@ -22,6 +22,9 @@
     </div>
 
     <div style="margin: 16px;">
+        <van-button plain hairline round block type="primary" style="margin-bottom: 10px" @click="toEdit('userPassword', '密码', user.userPassword)">
+            修改密码
+        </van-button>
         <van-button round block type="primary" @click="logout">
             退出登录
         </van-button>
@@ -35,6 +38,7 @@ import {onMounted, ref} from "vue";
 import myAxios from "../plugins/myAxios";
 import {Toast} from "vant";
 import {getCurrentUser} from "../services/user";
+import userBg from "../assets/userBg.jpg"
 
 const user = ref();
 const router = useRouter();
@@ -59,6 +63,7 @@ const toEdit = (editKey: string, editName: string, currentValue: string) => {
         }
     })
 }
+
 </script>
 
 <style scoped>
