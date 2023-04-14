@@ -7,13 +7,22 @@
     />
     <div v-if="user" style="transform: translateY( -60px)">
         <div style="text-align: center; margin: 5px">
-            <van-image
-                round
-                width="7rem"
-                height="7rem"
-                fit="cover"
-                :src="user.avatarUrl"
+<!--                        <van-image-->
+<!--                            round-->
+<!--                            width="7rem"-->
+<!--                            height="7rem"-->
+<!--                            fit="cover"-->
+<!--                            :src="user.avatarUrl"-->
+<!--                        />-->
+            <van-uploader
+                    round
+                    v-model="fileList"
+                    multiple
+                    :max-count="1"
+                    :after-read="afterRead"
             />
+<!--            <van-uploader v-model="fileList" multiple :max-count="2" />-->
+            <div style="font-size: 13px; color: #969799 ">点击图片可更换图片</div>
         </div>
         <van-cell title="昵称" is-link to="/user/edit" :value="user.username"
                   @click="toEdit('username', '昵称', user.username)"/>
@@ -41,14 +50,49 @@ import {useRouter} from "vue-router";
 import {onMounted, ref} from "vue";
 import {getCurrentUser} from "../services/user";
 import userBg from "../assets/userBg.jpg";
+import axios from "axios";
+import {UserType} from "../models/user";
 
-let user = ref();
+const router = useRouter();
+
+const user = ref<UserType>();
+const fileList = ref([])
 
 onMounted(async () => {
     user.value = await getCurrentUser();
+    fileList.value = [
+        {
+            url: user.value.avatarUrl,
+        }
+    ]
+    console.log("上传图片后", fileList)
 })
 
-const router = useRouter();
+
+const afterRead = (file) => {
+    // 创建表单数据对象
+    let formData = new FormData();
+    // 添加图片文件
+    formData.append("smfile", file.file);
+    // 发送 POST 请求到 sm.ms 的 API 地址
+    // axios.post("/imgUp/upload", formData, {
+    //     headers: {
+    //         "Content-Type": "multipart/form-data",
+    //         "Authorization": "g2mGk3t0SYEoU1DYbf6DFqt45MXHZT1C",
+    //     },
+    // })
+    //     .then((res) => {
+    //         // 处理响应数据
+    //         if (res.data.success) {
+    //             // 如果成功，显示图片链接
+    //         } else {
+    //             // 如果失败，显示错误信息
+    //         }
+    //     })
+    //     .catch((err) => {
+    //         // 处理异常情况
+    //     });
+}
 
 const toEdit = (editKey: string, editName: string, currentValue: string) => {
     router.push({

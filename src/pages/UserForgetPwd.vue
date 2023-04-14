@@ -1,29 +1,53 @@
 <template>
-    <van-field v-model="forgetEmail" label="邮箱" placeholder="请输入邮箱"/>
+    <van-field
+            v-model="forgetEmail"
+            name="forgetEmail"
+            placeholder="请输入邮箱"
+            @change="conEmail"
+            :rules="[{ required: true, message: '请填写邮箱' }]"
+    >
+        <template #button>
+            <span style="display: inline" class="iconify" data-icon="material-symbols:mail-outline"></span>
+        </template>
+    </van-field>
     <van-field
             v-model="checkCode"
             name="checkCode"
-            label="验证码"
             placeholder="请输入验证码"
             @change="fun_isCorrectCode"
             :rules="[{ required: true, message: '请填写验证码' }]"
-    />
-    <div style="position: relative">
-        <van-button plain round :disabled=isNotShowCheckCode type="primary" @click="click_checkCode"
-                    style="margin-left: 10px">
-            {{ textReg }}
-            <van-count-down style="display: inline; color: #1989fa" v-if="isShowTime" @finish="timeFinish"
-                            millisecond :time="time" format="ss"/>
-        </van-button>
-        <van-icon style="position: absolute; bottom: 7px; margin-left: 5px" v-if="isCorrectCode === 'true'" size="2rem" :name="correctImg" />
-    </div>
+    >
+        <template #button>
+            <div style="position: relative">
+                <van-icon style="position: absolute; bottom: 7px; right: 110px" v-if="isCorrectCode === 'true'"
+                          size="2rem" :name="correctImg"/>
+                <van-button :disabled=isNotShowCheckCode type="primary" @click="click_checkCode"
+                            style="margin-left: 10px">
+                    {{ textReg }}
+                    <van-count-down style="display: inline; color: #ffffff" v-if="isShowTime" @finish="timeFinish"
+                                    millisecond :time="time" format="ss"/>
+                </van-button>
+            </div>
+        </template>
+    </van-field>
 
-    <van-field v-model="newPwd" label="新密码：" type="password" placeholder="请输入新密码"/>
-    <van-field v-model="conNewPwd" label="确认新密码：" type="password" placeholder="请再次输入新密码"
-               @change="fun_conNewPwd"/>
-    <van-button round block type="primary" @click="submit">
-        提交
-    </van-button>
+    <van-field v-model="newPwd" type="password" placeholder="请输入新密码">
+        <template #button>
+            <span class="iconify" data-icon="mdi:password-outline"></span>
+        </template>
+    </van-field>
+    <van-field v-model="conNewPwd" type="password" placeholder="请再次输入新密码"
+               @change="fun_conNewPwd"
+    >
+        <template #button>
+            <span class="iconify" data-icon="mdi:password-check-outline"></span>
+        </template>
+    </van-field>
+    <div style="margin: 16px;">
+        <van-button round block type="primary" @click="submit" style="">
+            提交
+        </van-button>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -49,10 +73,6 @@ let newPwd = ref("")
 let conNewPwd = ref("")
 let noConfirm = ref(false)
 
-onMounted(async () => {
-    currentUser.value = await getCurrentUser();
-})
-
 const click_checkCode = async () => {
     // opt为0是告诉后端，此次获取验证码是找回密码
     const res = await myAxios.get('/user/sentcheckcode', {
@@ -69,7 +89,14 @@ const timeFinish = () => {
     isNotShowCheckCode.value = false
     isShowTime.value = false
 }
-
+const conEmail = () => {
+    const re = new RegExp("^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\\.[a-zA-Z0-9]{2,6}$");
+    if (re.test(forgetEmail.value)) {
+        isNotShowCheckCode.value = false
+    } else {
+        Toast.fail("请输入正确的邮箱！")
+    }
+}
 const fun_conNewPwd = () => {
     if (newPwd.value !== conNewPwd.value) {
         Toast.fail('两次新密码输入不一致！');
@@ -77,19 +104,19 @@ const fun_conNewPwd = () => {
     }
 }
 
-const fun_isCorrectCode = async ()=>{
+const fun_isCorrectCode = async () => {
     // 校对验证码
     const res = await myAxios.post('/user/resetPwtCheckCode?resetPwdCheckCode=' + checkCode.value)
     if (res.description === "验证码错误或已过期") {
         Toast.fail("验证码错误或已过期")
         isCorrectCode.value = "false";
-    }else{
+    } else {
         isCorrectCode.value = "true";
     }
 }
 
 const submit = async () => {
-    if(isCorrectCode.value === "true"){
+    if (isCorrectCode.value === "true") {
         // 验证码正确时运行
         const res2 = await myAxios.post('/user/update', {
             'id': currentUser.value.id,
@@ -101,7 +128,7 @@ const submit = async () => {
         } else {
             Toast.fail('修改失败');
         }
-    }else{
+    } else {
         Toast.fail("验证码错误或已过期")
     }
 }

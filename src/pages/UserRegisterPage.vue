@@ -4,48 +4,63 @@
             <van-field
                     v-model="userName"
                     name="userName"
-                    label="昵称"
                     placeholder="请输入昵称"
                     :rules="[{ required: true, message: '请输入昵称' }]"
-            />
+            >
+                <template #button>
+                    <span class="iconify" data-icon="icon-park-solid:edit-name"></span>
+                </template>
+            </van-field>
             <van-field
                     v-model="userMail"
                     name="userMail"
-                    label="邮箱"
                     placeholder="请输入邮箱"
                     :rules="[{ required: true, message: '请输入邮箱' }]"
-            />
+            >
+                <template #button>
+                    <span style="display: inline" class="iconify" data-icon="material-symbols:mail-outline"></span>
+                </template>
+            </van-field>
             <van-field
                     v-model="userPassword"
                     type="password"
                     name="userPassword"
-                    label="密码"
                     placeholder="请输入密码"
                     :rules="[{ required: true, message: '请输入密码' }]"
-            />
+            >
+                <template #button>
+                    <span class="iconify" data-icon="mdi:password-outline"></span>
+                </template>
+            </van-field>
             <van-field
                     v-model="checkPassword"
                     type="password"
                     name="userConfirmPassword"
-                    label="确认密码"
                     placeholder="请再次输入密码"
                     :rules="[{ required: true, message: '请再次输入密码' }]"
                     @change="confirmPwd"
-            />
+            >
+                <template #button>
+                    <span class="iconify" data-icon="mdi:password-check-outline"></span>
+                </template>
+            </van-field>
             <van-field
                     v-model="checkCode"
                     name="checkCode"
-                    label="验证码"
                     placeholder="请输入验证码"
                     :rules="[{ required: true, message: '请填写验证码' }]"
-            />
+            >
+                <template #button>
+                    <van-icon style="position: absolute; bottom: 7px;" v-if="isCorrectCode === 'true'" size="2rem" :name="correctImg" />
+                    <van-button :disabled=isShowCheckCode type="primary" @click="click_checkCode"
+                                style="margin-left: 20px">
+                        {{ textReg }}
+                        <van-count-down style="display: inline; color: #ffffff " v-if="isShowCheckCode" @finish="timeFinish"
+                                        millisecond :time="time" format="ss"/>
+                    </van-button>
+                </template>
+            </van-field>
         </van-cell-group>
-        <van-button plain round :disabled=isShowCheckCode type="primary" @click="click_checkCode"
-                    style="margin-left: 20px">
-            {{ textReg }}
-            <van-count-down style="display: inline; color: #1989fa" v-if="isShowCheckCode" @finish="timeFinish"
-                            millisecond :time="time" format="ss"/>
-        </van-button>
 
         <div style="margin: 16px;">
             <van-button plain hairline round block type="primary" to="/user/login">
@@ -76,6 +91,7 @@ let userMail = ref("")
 const userPassword = ref('');
 const checkPassword = ref('');
 const checkCode = ref('');
+let isCorrectCode = ref('false');
 
 const time = ref(60000)
 let isShowCheckCode = ref(false)
@@ -126,6 +142,7 @@ const onSubmit = async () => {
     })
     console.log("注册响应", res.data);
     if (res.code === 0) {
+        isCorrectCode.value = "true";
         Toast.success('注册并登录成功！');
 
         const res2 = await myAxios.post('/user/login', {

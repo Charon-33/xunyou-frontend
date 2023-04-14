@@ -4,28 +4,40 @@
             <van-field
                     v-model="userEmail"
                     name="userEmail"
-                    label="邮箱"
+                    placeholder="请输入邮箱"
                     :rules="[{ required: true, message: '请输入邮箱' }]"
-            />
+            >
+                <template #button>
+                    <span style="display: inline" class="iconify" data-icon="material-symbols:mail-outline"></span>
+                </template>
+            </van-field>
+
             <van-field
                     v-model="userPassword"
                     type="password"
                     name="userPassword"
-                    label="密码"
+                    placeholder="请输入密码"
                     :rules="[{ required: true, message: '请输入密码' }]"
-            />
+            >
+                <template #button>
+                    <span class="iconify" data-icon="mdi:password-outline"></span>
+                </template>
+            </van-field>
             <van-field
                     v-model="checkCode"
                     name="checkCode"
-                    label="验证码"
+                    placeholder="请输入验证码"
                     :rules="[{ required: true, message: '请输入验证码' }]"
-                    @change="confirmCheckCode()"
-            />
+                    @change="confirmCheckCode()">
+                <template #button>
+                    <img id="checkCodeImg" @click="changeCode()" :src="getVerifyCode"
+                         style="width: 100px; margin-right: 10px" alt="点击刷新验证码">
+                    <van-icon v-if="isCorrectCode === 'true'" size="2rem" :name="correctImg"/>
+                </template>
+            </van-field>
             <div style="margin-left: 15px; margin-top: 5px">
-                <img id="checkCodeImg" @click="changeCode()" :src="getVerifyCode"
-                     style="width: 100px; margin-right: 10px" alt="点击刷新验证码">
-                <van-icon v-if="isCorrectCode === 'true'" size="2rem" :name="correctImg"/>
-                <van-button plain hairline round type="primary" @click="fun_fogetPwd" style="float:right">
+
+                <van-button plain hairline round type="primary" style="float:right;" to="/user/forgetPwd">
                     忘记密码？
                 </van-button>
             </div>
@@ -107,21 +119,10 @@ const onSubmit = async () => {
         window.history.replaceState(null, "");
         window.location.href = redirectUrl;
     } else {
+        // @ts-ignore
         Toast.fail('登录失败！' + res.message);
     }
 };
-
-const fun_fogetPwd = ()=>{
-    // const uninterceptedAxiosInstance = axios.create ();
-    // uninterceptedAxiosInstance.post ('/user/forgetPwd')
-    myAxios.request (
-        {
-            url: 'http://localhost:3000/user/forgetPwd',
-            validateStatus:null
-        }
-    )
-    // window.location.href = '/user/forgetPwd';
-}
 
 </script>
 

@@ -54,7 +54,7 @@ let totalItems = 0;
 let page = reactive({pageSize: 10, pageNum: 1})
 let yeShu = reactive({pageYeShu: 0});
 let isShow = reactive({pageIsShow: true});
-let user = ref([])
+const user = ref([]);
 /**
  * 加载数据
  */

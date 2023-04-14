@@ -20,7 +20,7 @@
             <van-button round block plain hairline type="primary" native-type="submit">添加</van-button>
             <div style="margin: 15px">
                 <span>我的标签：</span>
-                <van-tag plain type="danger" v-for="tag in JSON.parse(editUser.currentValue)"
+                <van-tag plain type="danger" v-for="tag in JSON.parse(<string>editUser.currentValue)"
                          style="margin-right: 8px; margin-top: 8px" closeable @close="close(tag)">
                     {{ tag }}
                 </van-tag>
@@ -62,7 +62,7 @@ import {getCurrentUser} from "../services/user";
 const route = useRoute();
 const router = useRouter();
 
-const editUser = ref({
+let editUser = ref({
     editKey: route.query.editKey,
     currentValue: route.query.currentValue,
     editName: route.query.editName,
@@ -128,8 +128,8 @@ const close = (tag: any) => {
         return item !== tag;
     })
 
-    // console.log("删除后的标签：", tagsOld)
     editUser.value.currentValue = JSON.stringify(tagsOld);
+    // console.log("删除后的标签：", editUser.value.currentValue)
     onSubmit();
 };
 const onSubmit = async () => {
@@ -161,10 +161,9 @@ const onSubmit = async () => {
     // 将修改后的tag添加到当前的tags
     if (editUser.value.editKey === 'tags' && newTag.value) {
         console.log("新标签：", newTag.value)
-        let tagsAdd;
+        let tagsAdd = [];
         if (editUser.value.currentValue === null) {
             editUser.value.currentValue = ""
-            tagsAdd = []
         } else {
             tagsAdd = JSON.parse(editUser.value.currentValue);
         }

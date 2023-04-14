@@ -36,10 +36,11 @@ import {useRoute} from "vue-router";
 import myAxios from "../plugins/myAxios";
 import moment from "moment/moment";
 import userBg from "../assets/userBg.jpg"
+import {UserType} from "../models/user";
 
 const route = useRoute();
 
-let user = ref();
+const user = ref<UserType>();
 onMounted(async () => {
     const userid = route.query.userid;
     const res = await myAxios.get('/user/search/userid?userid=' + userid);

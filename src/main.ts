@@ -7,6 +7,9 @@ import 'vant/lib/index.css';
 import '../global.css';
 import { Uploader } from 'vant';
 import { Swipe, SwipeItem } from 'vant';
+import "@icon-park/vue-next/styles/index.css";
+
+import '@purge-icons/generated'
 
 const app = createApp(App);
 app.use(Vant);

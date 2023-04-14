@@ -15,6 +15,7 @@ import UserRegisterPage from "../pages/UserRegisterPage.vue";
 import UserRecInfoPage from "../pages/UserRecInfoPage.vue";
 import TeamDetails from "../pages/TeamDetails.vue";
 import UserForgetPwd from "../pages/UserForgetPwd.vue";
+import test from "../pages/123.vue"
 
 const routes = [
     { path: '/', component: Index },
@@ -32,7 +33,9 @@ const routes = [
     { path: '/user/team/create', title: '创建队伍', component: UserTeamCreatePage },
     { path: '/user/register', title: '注册与登录', component: UserRegisterPage },
     { path: '/user/recInfo', title: '用户详情', component: UserRecInfoPage },
-    { path: '/user/forgetPwd', title: '忘记密码', component: UserForgetPwd },
+    { path: '/user/forgetPwd', title: '找回密码', component: UserForgetPwd },
+    { path: '/test', title: '测试', component: test },
+
 ]
 
 export default routes;

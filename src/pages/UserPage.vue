@@ -39,8 +39,9 @@ import myAxios from "../plugins/myAxios";
 import {Toast} from "vant";
 import {getCurrentUser} from "../services/user";
 import userBg from "../assets/userBg.jpg"
+import {UserType} from "../models/user";
 
-const user = ref();
+const user = ref<UserType>();
 const router = useRouter();
 
 onMounted(async () => {
