@@ -64,7 +64,9 @@ import {Toast} from "vant";
 import correctImg from "../assets/correct.png"
 import axios from "axios";
 
+// 用于页面跳转
 const router = useRouter();
+// 用于获取页面信息
 const route = useRoute();
 
 const userEmail = ref('');

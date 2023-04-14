@@ -12,12 +12,12 @@
         <van-swipe-item>广告位招租</van-swipe-item>
     </van-swipe>
 
-    <van-cell center title="根据您设置的标签，以下是与您相匹配的10位伙伴哦！">
+    <van-cell center title="根据您设置的标签，以下是与您相匹配的10位伙伴哦！" >
         <template #right-icon>
             <van-switch v-model="isMatchMode" size="24"/>
         </template>
     </van-cell>
-    <user-card-list :user-list="userList" :loading="loading"/>
+    <user-card-list :user-list="userList" :loading="loading" v-if="user.tags !== '[]'"/>
 
   <!--  &lt;!&ndash; 可以使用 CellGroup 作为容器 &ndash;&gt;-->
   <!--  <div v-show="isShow.pageIsShow">-->
@@ -29,7 +29,7 @@
   <!--    </van-cell-group>-->
   <!--  </div>-->
 
-      <van-empty v-if="!user.tags" description="您还没有设置标签哦！赶快设置标签来匹配伙伴吧！"/>
+      <van-empty v-if="user.tags === '[]'" description="您还没有设置标签哦！赶快设置标签来匹配伙伴吧！"/>
 
 </template>
 
@@ -127,6 +127,7 @@ watchEffect(() => {
 
 onMounted(async () => {
     user.value = await getCurrentUser();
+
     // console.log("当前的用户信息：",user.value)
 })
 

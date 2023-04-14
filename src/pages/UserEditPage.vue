@@ -32,13 +32,6 @@
             <van-field v-model="conNewPwd" label="确认新密码：" type="password" placeholder="请再次输入新密码"
                        @change="fun_conNewPwd"/>
         </div>
-        <!--    <div v-if="editUser.editName === '头像'">-->
-        <!--      <span>请上传新的头像：</span>-->
-        <!--      <van-uploader v-model="fileList" multiple :max-count="1" />-->
-        <!--      <van-field-->
-        <!--          v-model="editUser.currentValue"-->
-        <!--      />-->
-        <!--    </div>-->
         <div style="margin: 16px;" v-if="editUser.editName !== '标签'">
             <div v-if="editUser.editName === '密码'">
                 <van-button plain hairline round block type="primary" style="margin-bottom: 10px" to="/user/forgetPwd">
@@ -88,6 +81,9 @@ onMounted(() => {
     if (editUser.value.editName === '密码') {
         noConfirm.value = true
     }
+    if (editUser.value.editName === '标签' && editUser.value.currentValue === null) {
+        editUser.value.currentValue = ""
+    }
 })
 
 const conOldPwd = () => {
@@ -115,6 +111,7 @@ const close = (tag: any) => {
     // console.log("要删除的标签：", tag)
     let tagsOld = JSON.parse(editUser.value.currentValue)
 
+    console.log("旧标签：", tagsOld)
     // 从JSON中删除指定字段的方法（旧）
     // for (let i = 0; i < tagsOld.length; i++) {
     //     if(tagsOld[i] === tag){
@@ -129,7 +126,7 @@ const close = (tag: any) => {
     })
 
     editUser.value.currentValue = JSON.stringify(tagsOld);
-    // console.log("删除后的标签：", editUser.value.currentValue)
+    console.log("删除后的标签：", editUser.value.currentValue)
     onSubmit();
 };
 const onSubmit = async () => {
@@ -138,20 +135,7 @@ const onSubmit = async () => {
         Toast.fail('用户未登录');
         return;
     }
-
-    // if(editUser.value.editKey === 'avatarUrl'){
-    //   editUser.value.currentValue = fileList.value[0].toString()
-    // }
-    // console.log("头像base64：", fileList.value[0])
-
-    // const forms = new FormData()
-    // forms.append('smfile', fileList.value[0])//这里名称必须是smfile
-    // const resUpload = myAxios.post('/proxy/v2/upload', forms, {//添加了跨域代理，这里的/proxy就是https://sm.ms/
-    //   headers: { 'Content-Type': 'multipart/form-data', Authorization: 'bn36ukovHS7FNblVjb7IIjrHPYXOsR2f' }
-    // })
-    // console.log("上传的sm.ms后的url", resUpload.url);
-
-    console.log(currentUser, '当前用户')
+    console.log('当前用户', currentUser)
 
     // 将修改后的性别代号赋值给当前的value
     if (editUser.value.editKey === 'gender') {
