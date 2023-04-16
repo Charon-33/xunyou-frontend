@@ -88,6 +88,7 @@ let isCorrectCode = ref('false');
 let getVerifyCode = ref('')
 onMounted(() => {
     getVerifyCode.value = 'http://localhost:8080/api/user/checkcode?t=' + new Date().getTime()
+    // const res = await myAxios.post('/user/check?codeClient=' + checkCode.value)
 })
 const changeCode = () => {
     getVerifyCode.value = 'http://localhost:8080/api/user/checkcode?t=' + new Date().getTime()

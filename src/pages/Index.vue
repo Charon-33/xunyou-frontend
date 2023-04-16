@@ -16,7 +16,7 @@
 <!--        <template #right-icon>-->
 <!--            <van-switch v-model="isMatchMode" size="24"/>-->
 <!--        </template>-->
-        <van-button plain type="primary">刷新</van-button>
+<!--        <van-button plain type="primary">刷新</van-button>-->
     </van-cell>
     <user-card-list :user-list="userList" :loading="loading" v-if="user.tags !== '[]'"/>
 
@@ -42,7 +42,7 @@ import UserCardList from "../components/UserCardList.vue";
 import {UserType} from "../models/user";
 import {getCurrentUser} from "../services/user";
 
-const isMatchMode = ref<boolean>(true);
+// const isMatchMode = ref<boolean>(true);
 
 const userList = ref([]);
 const loading = ref(true);
@@ -63,7 +63,7 @@ const loadData = async () => {
     let userListData;
     loading.value = true;
     // 根据标签匹配用户
-    if (isMatchMode.value) {
+    // if (isMatchMode.value) {
         isShow.pageIsShow = false;
         console.log("是否显示页数：", isShow.pageIsShow)
 
@@ -81,9 +81,9 @@ const loadData = async () => {
                 console.error('/user/match error', error);
                 Toast.fail('请求失败');
             })
-    } else {
-        console.log("关闭匹配模式")
-        userList.value = []
+    // } else {
+    //     console.log("关闭匹配模式")
+    //     userList.value = []
         // 普通模式，直接分页查询用户
         // 查总共多少条数据
         // const num = await myAxios.get('/user/totalItems')
@@ -109,7 +109,7 @@ const loadData = async () => {
         //       console.error('/user/recommend error', error);
         //       Toast.fail('请求失败');
         //     })
-    }
+    // }
     if (userListData) {
         userListData.forEach((user: UserType) => {
             if (user.tags) {
