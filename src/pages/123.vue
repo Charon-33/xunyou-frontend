@@ -37,7 +37,7 @@ export default {
             // formData.append("token", "g2mGk3t0SYEoU1DYbf6DFqt45MXHZT1C");
             // formData.append("Access-Control-Allow-Origin", "*");
             // 发送 POST 请求到 sm.ms 的 API 地址
-            axios.post("/imgUp/upload", formData, {
+            axios.post("/useSMMS/upload", formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
                         "Authorization": "g2mGk3t0SYEoU1DYbf6DFqt45MXHZT1C",
