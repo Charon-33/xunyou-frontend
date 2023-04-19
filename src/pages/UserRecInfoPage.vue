@@ -20,7 +20,7 @@
         <van-cell title="性别" :value="user.gender"/>
         <van-cell title="电话" :value="user.phone"/>
         <van-cell title="邮箱" :value="user.email"/>
-        <van-cell title="标签" is-link to="/user/edit" @click="toEdit('tags', '标签', user.tags)">
+        <van-cell title="标签">
             <van-tag plain type="danger" v-for="tag in JSON.parse(user.tags)"
                      style="margin-right: 8px; margin-top: 8px">
                 {{ tag }}

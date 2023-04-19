@@ -4,16 +4,15 @@
         :desc="user.profile"
         :title="`${user.username}`"
         :thumb="user.avatarUrl"
-        is-link to="/user/recInfo"
-        @click="toInfo(user.id)"
     >
       <template #tags>
         <van-tag plain type="danger" v-for="tag in user.tags" style="margin-right: 8px; margin-top: 8px">
           {{ tag }}
         </van-tag>
       </template>
-      <template #footer>
+      <template #num>
 <!--        <van-button size="mini">联系我</van-button>-->
+          <van-button type="primary" size="small" plain @click="toInfo(user.id)">查看详情</van-button>
       </template>
     </van-card>
   </van-skeleton>
@@ -22,7 +21,7 @@
 <script setup lang="ts">
 import {UserType} from "../models/user";
 import {useRouter} from "vue-router";
-import internal from "stream";
+
 const router = useRouter();
 interface UserCardListProps {
   loading: boolean;

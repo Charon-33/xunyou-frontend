@@ -7,19 +7,12 @@
     />
     <div v-if="user" style="transform: translateY( -60px)">
         <div style="text-align: center; margin: 5px">
-                                    <van-image
-                                        round
-                                        width="7rem"
-                                        height="7rem"
-                                        fit="cover"
-                                        :src="user.avatarUrl"
-                                    />
-<!--            <van-uploader-->
-<!--                    v-model="fileList"-->
-<!--                    :max-count="1"-->
-<!--                    :after-read="afterRead"-->
-<!--            />-->
-<!--            <div style="font-size: 13px; color: #969799 ">点击图片可更换图片</div>-->
+            <van-uploader
+                v-model="fileList"
+                :max-count="1"
+                :after-read="afterRead"
+            />
+            <div style="font-size: 13px; color: #969799 ">点击头像可更换头像</div>
         </div>
         <van-cell title="昵称" is-link to="/user/edit" :value="user.username"
                   @click="toEdit('username', '昵称', user.username)"/>
@@ -45,65 +38,24 @@ import {useRouter} from "vue-router";
 import {onMounted, ref} from "vue";
 import {getCurrentUser} from "../services/user";
 import userBg from "../assets/userBg.jpg";
-import axios from "axios";
 import {UserType} from "../models/user";
-import {Toast} from "vant";
 import myAxios from "../plugins/myAxios";
+import {Toast} from "vant";
+import axios from "axios";
 
 const router = useRouter();
 
 const user = ref<UserType>();
-const fileList = ref([])
+let fileList = ref([{}])
 
 onMounted(async () => {
     user.value = await getCurrentUser();
-    fileList.value = [
-        {
-            url: user.value.avatarUrl,
-        }
-    ]
+    if(user.value?.avatarUrl){
+        fileList.value[0].url = user.value.avatarUrl
+    }else{
+        fileList.value[0].url = ""
+    }
 })
-
-// 图床用户了，暂时不能用这个功能
-// const afterRead = (file) => {
-//     console.log("上传图片后", file.file)
-//     // 创建表单数据对象
-//     let formData = new FormData();
-//     // 添加图片文件
-//     formData.append("smfile", file.file);
-//     // 发送 POST 请求到 sm.ms 的 API 地址
-//     axios.post("/imgUp/upload", formData, {
-//         headers: {
-//             "Content-Type": "multipart/form-data",
-//             "Authorization": "g2mGk3t0SYEoU1DYbf6DFqt45MXHZT1C",
-//         },
-//     })
-//         .then(async (res) => {
-//             // 处理响应数据
-//             if (res.data.success) {
-//                 let imgUrl = res.data.data.url;
-//                 console.log("上传到图床的url：", imgUrl)
-//                 // 将信息传给后端执行更新
-//                 const update = await myAxios.post('/user/update', {
-//                     'id': user.value.id,
-//                     // 动态生成
-//                     avatarUrl: imgUrl,
-//                 })
-//                 if (update.code === 0 && update.data > 0) {
-//                     Toast.success('修改成功');
-//                 } else {
-//                     Toast.fail('修改失败');
-//                 }
-//             } else {
-//                 Toast.fail("图片上传失败")
-//             }
-//         })
-//         .catch((err) => {
-//             // 处理异常情况
-//             Toast.fail("上传失败", err.message);
-//             console.log("上传失败", err.message);
-//         });
-// }
 
 const toEdit = (editKey: string, editName: string, currentValue: string) => {
     router.push({
@@ -115,6 +67,65 @@ const toEdit = (editKey: string, editName: string, currentValue: string) => {
         }
     })
 }
+
+const afterRead = (file) => {
+    console.log("上传图片后", file.file)
+    fileList.value[0].status = 'uploading';
+    fileList.value[0].message = '上传中...';
+    // 创建表单数据对象
+    let formData = new FormData();
+    // 添加图片文件
+    formData.append("smfile", file.file);
+    // 发送 POST 请求到 sm.ms 的 API 地址
+    axios.post("/useSMMS/upload", formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+            "Authorization": "g2mGk3t0SYEoU1DYbf6DFqt45MXHZT1C",
+        },
+    })
+        .then((res) => {
+            fileList.value[0].status = '';
+            fileList.value[0].message = '';
+            // 处理响应数据
+            if (res.data.success) {
+                console.log("处理成功：",res.data)
+                updateImg(res.data.data.url)
+            } else {
+                // 处理异常情况
+                console.log("处理异常：",res)
+                if(res.data.code === "image_repeated"){
+                    updateImg(res.data.images)
+                }else{
+                    fileList.value[0].status = 'failed';
+                    fileList.value[0].message = '上传失败';
+                    Toast.fail("图片上传失败")
+                }
+            }
+        })
+        .catch((err) => {
+            // 处理异常情况
+            fileList.value[0].status = 'failed';
+            fileList.value[0].message = '上传失败';
+            Toast.fail("上传失败", err.message);
+            console.log("上传失败", err.message);
+        });
+}
+
+const updateImg = async (newImgUrl)=>{
+    console.log("上传到图床的url：", newImgUrl)
+    // 将信息传给后端执行更新
+    const update = await myAxios.post('/user/update', {
+        'id': user.value?.id,
+        // 动态生成
+        avatarUrl: newImgUrl,
+    })
+    if (update.code === 0 && update.data > 0) {
+        Toast.success('修改成功');
+    } else {
+        Toast.fail('修改失败');
+    }
+}
+
 </script>
 
 <style scoped>

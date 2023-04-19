@@ -15,7 +15,7 @@ import UserRegisterPage from "../pages/UserRegisterPage.vue";
 import UserRecInfoPage from "../pages/UserRecInfoPage.vue";
 import TeamDetails from "../pages/TeamDetails.vue";
 import UserForgetPwd from "../pages/UserForgetPwd.vue";
-import test from "../pages/456.vue"
+import test from "../pages/123.vue"
 
 const routes = [
     { path: '/', component: Index },

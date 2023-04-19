@@ -1,9 +1,10 @@
 {
-  "name": "yupao-frontend",
+  "name": "xunyou-frontend",
   "private": true,
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
+    "deploy": "vite --host 0.0.0.0",
     "build": "vite build",
     "preview": "vite preview"
   },

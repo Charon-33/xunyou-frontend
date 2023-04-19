@@ -50,6 +50,7 @@ export default {
                         this.imgUrl = res.data.data.url;
                         this.errorMsg = "";
                     } else {
+                        console.log("失败了",res)
                         // 如果失败，显示错误信息
                         this.imgUrl = "";
                         this.errorMsg = res.data.message;
@@ -59,6 +60,7 @@ export default {
                     // 处理异常情况
                     this.imgUrl = "";
                     this.errorMsg = err.message;
+                    console.log(err)
                 });
         },
     },
