@@ -86,14 +86,14 @@ let isCorrectCode = ref('false');
 // })
 let getVerifyCode = ref('')
 onMounted(async () => {
-    // getVerifyCode.value = 'http://47.120.38.224:8080/api/user/checkcode?t=' + new Date().getTime()
-    getVerifyCode.value = 'http://localhost:8080/api/user/login/code/refresh?t=' + new Date().getTime()
+    getVerifyCode.value = 'http://47.120.38.224:8080/api/user/checkcode?t=' + new Date().getTime()
+    // getVerifyCode.value = 'http://localhost:8080/api/user/login/code/refresh?t=' + new Date().getTime()
 
     // const res = await myAxios.post('/user/check?codeClient=' + new Date().getTime())
     // console.log("获取验证码：",res)
 })
 const changeCode = () => {
-    getVerifyCode.value = 'http://localhost:8080/api/user/login/code/refresh?t=' + new Date().getTime()
+    getVerifyCode.value = 'http://47.120.38.224:8080/api/user/login/code/refresh?t=' + new Date().getTime()
     console.log("更换了验证码")
 }
 const confirmCheckCode = async () => {
