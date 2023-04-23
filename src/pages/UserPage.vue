@@ -17,12 +17,13 @@
         </div>
         <van-cell title="当前用户" :value="user?.username"/>
         <van-cell title="修改信息" is-link to="/user/update"/>
-        <!--    <van-cell title="我创建的队伍" is-link to="/user/team/create" />-->
-        <!--    <van-cell title="我加入的队伍" is-link to="/user/team/join" />-->
+        <van-cell title="我创建的队伍" is-link to="/user/team/create"/>
+        <van-cell title="我加入的队伍" is-link to="/user/team/join"/>
     </div>
 
     <div style="margin: 16px;">
-        <van-button plain hairline round block type="primary" style="margin-bottom: 10px" @click="toEdit('userPassword', '密码', user.userPassword)">
+        <van-button plain hairline round block type="primary" style="margin-bottom: 10px"
+                    @click="toEdit('userPassword', '密码', user.userPassword)">
             修改密码
         </van-button>
         <van-button round block type="primary" @click="logout">

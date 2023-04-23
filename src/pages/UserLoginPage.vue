@@ -30,13 +30,12 @@
                     :rules="[{ required: true, message: '请输入验证码' }]"
                     @change="confirmCheckCode()">
                 <template #button>
+                    <van-icon v-if="isCorrectCode === 'true'" size="2rem" :name="correctImg"/>
                     <img id="checkCodeImg" @click="changeCode()" :src="getVerifyCode"
                          style="width: 100px; margin-right: 10px" alt="点击刷新验证码">
-                    <van-icon v-if="isCorrectCode === 'true'" size="2rem" :name="correctImg"/>
                 </template>
             </van-field>
             <div style="margin-left: 15px; margin-top: 5px">
-
                 <van-button plain hairline round type="primary" style="float:right;" to="/user/forgetPwd">
                     忘记密码？
                 </van-button>
@@ -87,25 +86,25 @@ let isCorrectCode = ref('false');
 // })
 let getVerifyCode = ref('')
 onMounted(async () => {
-    getVerifyCode.value = 'http://47.120.38.224:8080/api/user/checkcode?t=' + new Date().getTime()
+    // getVerifyCode.value = 'http://47.120.38.224:8080/api/user/checkcode?t=' + new Date().getTime()
+    getVerifyCode.value = 'http://localhost:8080/api/user/login/code/refresh?t=' + new Date().getTime()
 
     // const res = await myAxios.post('/user/check?codeClient=' + new Date().getTime())
     // console.log("获取验证码：",res)
 })
 const changeCode = () => {
-    getVerifyCode.value = 'http://47.120.38.224:8080/api/user/checkcode?t=' + new Date().getTime()
+    getVerifyCode.value = 'http://localhost:8080/api/user/login/code/refresh?t=' + new Date().getTime()
     console.log("更换了验证码")
 }
 const confirmCheckCode = async () => {
     // v-show 不支持在 <template> 元素上使用，也不能和 v-else 搭配使用。
     isCorrectCode.value = "false";
-    console.log("隐藏校对结果图片", isCorrectCode.value)
-    const res = await myAxios.post('/user/check?codeClient=' + checkCode.value)
-    console.log("校对验证码结果：", res)
+    const res = await myAxios.get('/user/login/code/check?codeClient=' + checkCode.value)
+    // console.log("校对验证码结果：", res)
     if (res) {
         isCorrectCode.value = "true";
     }
-    console.log("显示校对结果图片", isCorrectCode.value)
+    // console.log("显示校对结果图片", isCorrectCode.value)
 }
 
 const onSubmit = async () => {
@@ -125,7 +124,7 @@ const onSubmit = async () => {
         window.location.href = redirectUrl;
     } else {
         // @ts-ignore
-        Toast.fail('登录失败！' + res.message);
+        Toast.fail('登录失败！' + res.description);
     }
 };
 

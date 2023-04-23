@@ -17,7 +17,7 @@
         <van-cell title="昵称" is-link to="/user/edit" :value="user.username"
                   @click="toEdit('username', '昵称', user.username)"/>
         <van-cell title="账号" :value="user.id"/>
-        <van-cell title="头像" is-link to="/user/edit" @click="toEdit('avatarUrl', '头像', user.avatarUrl)"/>
+<!--        <van-cell title="头像" is-link to="/user/edit" @click="toEdit('avatarUrl', '头像', user.avatarUrl)"/>-->
         <van-cell title="性别" is-link :value="user.gender" @click="toEdit('gender', '性别', user.gender)"/>
         <van-cell title="电话" is-link to="/user/edit" :value="user.phone"
                   @click="toEdit('phone', '电话', user.phone)"/>
@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
 import {useRouter} from "vue-router";
-import {onMounted, ref} from "vue";
+import {onBeforeMount, onMounted, ref} from "vue";
 import {getCurrentUser} from "../services/user";
 import userBg from "../assets/userBg.jpg";
 import {UserType} from "../models/user";
@@ -48,12 +48,17 @@ const router = useRouter();
 const user = ref<UserType>();
 let fileList = ref([{}])
 
-onMounted(async () => {
+onBeforeMount(async () => {
     user.value = await getCurrentUser();
+    // 头像是否为空
     if(user.value?.avatarUrl){
         fileList.value[0].url = user.value.avatarUrl
     }else{
         fileList.value[0].url = ""
+    }
+    // 标签是否为空
+    if(user.value.tags === null){
+        user.value.tags = "[]"
     }
 })
 
@@ -114,7 +119,7 @@ const afterRead = (file) => {
 const updateImg = async (newImgUrl)=>{
     console.log("上传到图床的url：", newImgUrl)
     // 将信息传给后端执行更新
-    const update = await myAxios.post('/user/update', {
+    const update = await myAxios.post('/user/update?opt=0', {
         'id': user.value?.id,
         // 动态生成
         avatarUrl: newImgUrl,

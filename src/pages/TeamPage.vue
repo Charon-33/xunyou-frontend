@@ -58,7 +58,6 @@ const listTeam = async (val = '', status = 0) => {
     const res = await myAxios.get("/team/list", {
         params: {
             searchText: val,
-            pageNum: 1,
             status: status,
         },
     });

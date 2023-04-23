@@ -25,21 +25,15 @@
                 </div>
             </template>
             <template #footer>
-                <!--        <van-button size="small" plain-->
-                <!--                    is-link to="/teamUserInfo"-->
-                <!--                    @click="toInfo(team.id)">查看队伍-->
-                <!--        </van-button>-->
-                <van-button  size="small" plain @click="toDetails(team.id)">查看详情
-                </van-button>
+                <van-button  size="small" type="warning" plain @click="toDetails(team.id)">查看详情</van-button>
                 <van-button size="small" type="primary" v-if="team.userId !== currentUser?.id && !team.hasJoin" plain
-                            @click="preJoinTeam(team)">
-                    加入队伍
+                            @click="preJoinTeam(team)">加入队伍
                 </van-button>
-                <van-button v-if="team.userId === currentUser?.id" size="small" plain
+                <van-button v-if="team.userId === currentUser?.id" size="small" type="success" plain
                             @click="doUpdateTeam(team.id)">更新队伍
                 </van-button>
                 <!-- 仅加入队伍可见 -->
-                <van-button v-if="team.userId !== currentUser?.id && team.hasJoin" size="small" plain
+                <van-button v-if="team.userId !== currentUser?.id && team.hasJoin" type="danger" size="small" plain
                             @click="doQuitTeam(team.id)">退出队伍
                 </van-button>
                 <van-button v-if="team.userId === currentUser?.id" size="small" type="danger" plain

@@ -1,7 +1,7 @@
 <template>
     <van-field
-            v-model="forgetEmail"
-            name="forgetEmail"
+            v-model="resetPwdEmail"
+            name="resetPwdEmail"
             placeholder="请输入邮箱"
             @change="conEmail"
             :rules="[{ required: true, message: '请填写邮箱' }]"
@@ -60,8 +60,7 @@ import {useRouter} from "vue-router";
 import correctImg from "../assets/correct.png";
 
 const router = useRouter();
-let currentUser = ref([])
-let forgetEmail = ref("")
+let resetPwdEmail = ref("")
 let checkCode = ref("")
 let textReg = ref("获取验证码")
 let isNotShowCheckCode = ref(true)
@@ -75,9 +74,9 @@ let noConfirm = ref(false)
 
 const click_checkCode = async () => {
     // opt为0是告诉后端，此次获取验证码是找回密码
-    const res = await myAxios.get('/user/sentcheckcode', {
+    const res = await myAxios.get('/user/code/send', {
         params: {
-            mail: forgetEmail.value,
+            mail: resetPwdEmail.value,
             opt: 0,
         },
     })
@@ -91,9 +90,10 @@ const timeFinish = () => {
 }
 const conEmail = () => {
     const re = new RegExp("^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\\.[a-zA-Z0-9]{2,6}$");
-    if (re.test(forgetEmail.value)) {
+    if (re.test(resetPwdEmail.value)) {
         isNotShowCheckCode.value = false
     } else {
+        isNotShowCheckCode.value = true
         Toast.fail("请输入正确的邮箱！")
     }
 }
@@ -106,7 +106,7 @@ const fun_conNewPwd = () => {
 
 const fun_isCorrectCode = async () => {
     // 校对验证码
-    const res = await myAxios.post('/user/resetPwtCheckCode?resetPwdCheckCode=' + checkCode.value)
+    const res = await myAxios.get('/user/code/check?codeCheck=' + checkCode.value)
     if (res.description === "验证码错误或已过期") {
         Toast.fail("验证码错误或已过期")
         isCorrectCode.value = "false";
@@ -118,18 +118,16 @@ const fun_isCorrectCode = async () => {
 const submit = async () => {
     if (isCorrectCode.value === "true") {
         // 验证码正确时运行
-        const res2 = await myAxios.post('/user/update', {
-            'id': currentUser.value.id,
+        const res2 = await myAxios.post('/user/update?opt=1', {
+            email: resetPwdEmail.value,
             userPassword: conNewPwd.value,
         })
         if (res2.code === 0 && res2.data > 0) {
             Toast.success('修改成功');
-            router.back
+            router.back()
         } else {
             Toast.fail('修改失败');
         }
-    } else {
-        Toast.fail("验证码错误或已过期")
     }
 }
 

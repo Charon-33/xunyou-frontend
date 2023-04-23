@@ -1,10 +1,10 @@
 <template>
-  <div id="teamPage">
-    <van-search v-model="searchText" placeholder="搜索队伍" @search="onSearch" />
-    <van-button type="primary" @click="doJoinTeam">创建队伍</van-button>
-    <team-card-list :teamList="teamList" />
-    <van-empty v-if="teamList?.length < 1" description="数据为空"/>
-  </div>
+    <div id="teamPage">
+        <van-search v-model="searchText" placeholder="搜索队伍" @search="onSearch"/>
+        <team-card-list :teamList="teamList"/>
+        <van-button style="z-index:999" class="add-button" type="primary" icon="plus" @click="toAddTeam"/>
+        <van-empty v-if="teamList?.length < 1" description="数据为空"/>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -20,9 +20,9 @@ const searchText = ref('');
 
 // 跳转到加入队伍页
 const doJoinTeam = () => {
-  router.push({
-    path: "/team/add"
-  })
+    router.push({
+        path: "/team/add"
+    })
 }
 
 const teamList = ref([]);
@@ -33,28 +33,34 @@ const teamList = ref([]);
  * @returns {Promise<void>}
  */
 const listTeam = async (val = '') => {
-  const res = await myAxios.get("/team/list/my/create", {
-    params: {
-      searchText: val,
-      pageNum: 1,
-    },
-  });
-  if (res?.code === 0) {
-    teamList.value = res.data;
-  } else {
-    Toast.fail('加载队伍失败，请刷新重试');
-  }
+    const res = await myAxios.get("/team/list/my/create", {
+        params: {
+            searchText: val,
+            pageNum: 1,
+        },
+    });
+    if (res?.code === 0) {
+        teamList.value = res.data;
+    } else {
+        Toast.fail('加载队伍失败，请刷新重试');
+    }
 }
 
 
 // 页面加载时只触发一次
-onMounted( () => {
-  listTeam();
+onMounted(() => {
+    listTeam();
 })
 
 const onSearch = (val) => {
-  listTeam(val);
+    listTeam(val);
 };
+
+const toAddTeam = () => {
+    router.push({
+        path: "/team/add"
+    })
+}
 
 </script>
 

@@ -32,7 +32,7 @@
         </div>
         <div style="margin: 20px">
             过期时间
-            <span style="float: right">{{ teamDetails[0].expireTime }}</span>
+            <span style="float: right">{{ moment(teamDetails[0].expireTime).format('yyyy-MM-DD') }}</span>
         </div>
         <div style="margin: 20px">
             群成员（ {{ teamDetails[0].hasJoinNum }} / {{ teamDetails[0].maxNum }} ）
@@ -60,16 +60,11 @@
 
     <div style="margin: 10px; text-align: right">
         <van-sticky :offset-bottom="55" position="bottom">
-<!--            <van-button type="primary" style="margin-right: 5px">加入队伍</van-button>-->
-<!--            <van-button type="primary" style="margin-right: 5px">更新队伍</van-button>-->
-<!--            <van-button type="primary" style="margin-right: 5px">解散队伍</van-button>-->
-<!--            <van-button type="primary">退出队伍</van-button>-->
 
             <van-button style="margin-right: 10px" size="normal" type="primary" v-if="teamDetails[0].userId !== currentUser?.id && !teamDetails[0].hasJoin" plain
-                        @click="preJoinTeam(teamDetails[0])">
-                加入队伍
+                        @click="preJoinTeam(teamDetails[0])">加入队伍
             </van-button>
-            <van-button style="margin-right: 10px" v-if="teamDetails[0].userId === currentUser?.id" size="normal" type="primary" plain
+            <van-button style="margin-right: 10px" v-if="teamDetails[0].userId === currentUser?.id" size="normal" type="success" plain
                         @click="doUpdateTeam(teamDetails[0].id)">更新队伍
             </van-button>
             <!-- 仅加入队伍可见 -->
@@ -112,15 +107,14 @@ const router = useRouter();
 onBeforeMount(async () => {
     currentUser.value = await getCurrentUser();
     //查找队伍的详细信息
-    console.log("队伍的id：", route.query.teamId)
+    // console.log("队伍的id：", route.query.teamId)
     const res = await myAxios.get("/team/list", {
         params: {
             id: route.query.teamId
         }
     })
     teamDetails.value = res.data;
-    teamDetails.value[0].expireTime = moment(res.data.createTime).format('yyyy-MM-DD')
-    console.log("队伍详情：", teamDetails.value)
+    // console.log("队伍详情：", res.data)
 
     //查找队伍中队员的详细信息
     loading.value = true;

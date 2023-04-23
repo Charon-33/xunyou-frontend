@@ -105,7 +105,7 @@ const click_checkCode = async () => {
         textReg.value = "重新获取"
 
         // opt为1是告诉后端，此次获取验证码是用于注册
-        const res = await myAxios.get('/user/sentcheckcode', {
+        const res = await myAxios.get('/user/code/send', {
             params: {
                 mail: userMail.value,
                 opt: 1,

@@ -21,7 +21,7 @@
     />
 
     <user-card-list :user-list="userList" :loading="loading" v-if="user.tags !== '[]'"/>
-    <van-empty v-if="user.tags === '[]'" description="您还没有设置标签哦！赶快设置标签来匹配伙伴吧！"/>
+    <van-empty v-if="user.tags === '[]' || user.tags === null" description="您还没有设置标签哦！赶快设置标签来匹配伙伴吧！"/>
 </template>
 
 <script setup lang="ts">

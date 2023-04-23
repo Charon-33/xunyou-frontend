@@ -87,16 +87,18 @@ onMounted(() => {
 })
 
 const conOldPwd = () => {
-    if (oldPwd.value !== editUser.value.editName) {
+    if (oldPwd.value !== editUser.value.currentValue) {
         Toast.fail('原密码输入错误！');
         noConfirm.value = true
+    }else{
+        noConfirm.value = false
     }
 }
 const fun_conNewPwd = () => {
     if (newPwd.value !== conNewPwd.value) {
         Toast.fail('两次新密码输入不一致！');
         noConfirm.value = true
-    }else if(oldPwd.value === editUser.value.editName){
+    }else if(oldPwd.value === editUser.value.currentValue){
         noConfirm.value = false
     }
 }
@@ -145,14 +147,19 @@ const onSubmit = async () => {
     // 将修改后的tag添加到当前的tags
     if (editUser.value.editKey === 'tags' && newTag.value) {
         console.log("新标签：", newTag.value)
+        // 创建新的object，用于报存原标签
         let tagsAdd = [];
+        // 判断原本的标签是否为空
         if (editUser.value.currentValue === null) {
-            editUser.value.currentValue = ""
+            editUser.value.currentValue = "[]"
         } else {
             tagsAdd = JSON.parse(editUser.value.currentValue);
         }
+        // 新标签转小写
         newTag.value = newTag.value.toLowerCase()
+        //新标签存入原标签
         tagsAdd.push(newTag.value)
+        // 将标签转为字符串
         editUser.value.currentValue = JSON.stringify(tagsAdd)
         newTag.value = "";
     }
@@ -163,7 +170,7 @@ const onSubmit = async () => {
     }
 
     // 将信息传给后端执行更新
-    const res = await myAxios.post('/user/update', {
+    const res = await myAxios.post('/user/update?opt=0', {
         'id': currentUser.id,
         // 动态生成
         [editUser.value.editKey as string]: editUser.value.currentValue,
