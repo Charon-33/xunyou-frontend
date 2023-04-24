@@ -31,8 +31,7 @@
                     @change="confirmCheckCode()">
                 <template #button>
                     <van-icon v-if="isCorrectCode === 'true'" size="2rem" :name="correctImg"/>
-                    <img id="checkCodeImg" @click="changeCode()" :src="getVerifyCode"
-                         style="width: 100px; margin-right: 10px" alt="点击刷新验证码">
+                    <ValidateCode :identifyCode="identifyCode" @click="refreshCode" />
                 </template>
             </van-field>
             <div style="margin-left: 15px; margin-top: 5px">
@@ -57,11 +56,11 @@
 
 <script setup lang="ts">
 import {useRoute, useRouter} from "vue-router";
-import {onMounted, ref} from "vue";
+import {onMounted, Ref, ref} from "vue";
 import myAxios from "../plugins/myAxios";
 import {Toast} from "vant";
 import correctImg from "../assets/correct.png"
-import axios from "axios";
+import ValidateCode from "../components/ValidateCode.vue";
 
 // 用于页面跳转
 const router = useRouter();
@@ -72,6 +71,7 @@ const userEmail = ref('');
 const userPassword = ref('');
 const checkCode = ref('');
 let isCorrectCode = ref('false');
+
 // onMounted(async () => {
 //     await axios.get('http://localhost:8080/api/user/current').then(result => {
 //     //TODO 看一下result有什么信息，然后根据信息，决定是否跳转
@@ -84,30 +84,47 @@ let isCorrectCode = ref('false');
 //     }
 //   })
 // })
-let getVerifyCode = ref('')
-onMounted(async () => {
-    getVerifyCode.value = 'http://47.120.38.224:8080/api/user/checkcode?t=' + new Date().getTime()
-    // getVerifyCode.value = 'http://localhost:8080/api/user/login/code/refresh?t=' + new Date().getTime()
 
-    // const res = await myAxios.post('/user/check?codeClient=' + new Date().getTime())
-    // console.log("获取验证码：",res)
+const identifyCode = ref();
+const identifyCodes = ref("1234567890abcdefjhijklinopqrsduvwxyz");
+
+onMounted(()=>{
+    refreshCode()
 })
-const changeCode = () => {
-    getVerifyCode.value = 'http://47.120.38.224:8080/api/user/login/code/refresh?t=' + new Date().getTime()
-    console.log("更换了验证码")
-}
-const confirmCheckCode = async () => {
+
+// 重置验证码
+const refreshCode = () => {
+    identifyCode.value = "";
+    makeCode(identifyCode, 4);
+};
+
+const makeCode = (o: Ref<any>, l: number) => {
+    for (let i = 0; i < l; i++) {
+        identifyCode.value += identifyCodes.value[randomNum(0, identifyCodes.value.length)];
+    }
+};
+
+const randomNum = (min: number, max: number) => {
+    return Math.floor(Math.random() * (max - min) + min);
+};
+
+const confirmCheckCode = () => {
     // v-show 不支持在 <template> 元素上使用，也不能和 v-else 搭配使用。
     isCorrectCode.value = "false";
-    const res = await myAxios.get('/user/login/code/check?codeClient=' + checkCode.value)
-    // console.log("校对验证码结果：", res)
-    if (res) {
+    if ( checkCode.value === identifyCode.value) {
         isCorrectCode.value = "true";
+    } else {
+        isCorrectCode.value = "false";
+        Toast.fail("验证码错误")
     }
-    // console.log("显示校对结果图片", isCorrectCode.value)
+
 }
 
 const onSubmit = async () => {
+    if(isCorrectCode.value === "false"){
+        Toast.fail("验证码错误，请重新输入")
+        return
+    }
     const res = await myAxios.post('/user/login', {
         userEmail: userEmail.value,
         userPassword: userPassword.value,
