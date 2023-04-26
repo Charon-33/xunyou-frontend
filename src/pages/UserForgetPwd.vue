@@ -106,7 +106,8 @@ const fun_conNewPwd = () => {
 
 const fun_isCorrectCode = async () => {
     // 校对验证码
-    const res = await myAxios.get('/user/code/check?codeCheck=' + checkCode.value)
+    const res = await myAxios.get('/user/code/check?codeCheck=' + checkCode.value
+        + "&email=" + resetPwdEmail.value)
     if (res.description === "验证码错误或已过期") {
         Toast.fail("验证码错误或已过期")
         isCorrectCode.value = "false";
@@ -128,6 +129,8 @@ const submit = async () => {
         } else {
             Toast.fail('修改失败');
         }
+    }else{
+        Toast.fail("请输入正确的验证码")
     }
 }
 

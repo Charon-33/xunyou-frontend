@@ -35,8 +35,7 @@ const teamList = ref([]);
 const listTeam = async (val = '') => {
     const res = await myAxios.get("/team/list/my/create", {
         params: {
-            searchText: val,
-            pageNum: 1,
+            searchText: val
         },
     });
     if (res?.code === 0) {
