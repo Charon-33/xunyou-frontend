@@ -101,6 +101,11 @@ const conOldPwd = () => {
     }
 }
 const fun_conNewPwd = () => {
+    if (conNewPwd.value === "") {
+        Toast.fail('密码不能为空');
+        noConfirm.value = true
+        return
+    }
     if (conNewPwd.value.length < 8) {
         Toast.fail('密码不能小于8位');
         noConfirm.value = true

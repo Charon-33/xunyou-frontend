@@ -47,7 +47,7 @@
         </template>
     </van-field>
     <div style="margin: 16px;">
-        <van-button round block type="primary" @click="submit" style="">
+        <van-button round block type="primary" @click="submit" :disabled="noConfirm">
             提交
         </van-button>
     </div>
@@ -73,7 +73,7 @@ let isCorrectCode = ref('false');
 
 let newPwd = ref("")
 let conNewPwd = ref("")
-let noConfirm = ref(false)
+let noConfirm = ref(true)
 
 const click_checkCode = async () => {
     // opt为0是告诉后端，此次获取验证码是找回密码
@@ -101,6 +101,11 @@ const conEmail = () => {
     }
 }
 const fun_conNewPwd = () => {
+    if(conNewPwd.value === ""){
+        Toast.fail('密码不能为空');
+        noConfirm.value = true
+        return
+    }
     if(conNewPwd.value.length < 8){
         Toast.fail('密码不能小于8位');
         noConfirm.value = true
@@ -109,7 +114,11 @@ const fun_conNewPwd = () => {
     if (newPwd.value !== conNewPwd.value) {
         Toast.fail('两次新密码输入不一致！');
         noConfirm.value = true
+        return
+    }else if( newPwd.value === conNewPwd.value){
+        noConfirm.value = false
     }
+    console.log("未知错误")
 }
 
 const fun_isCorrectCode = async () => {
