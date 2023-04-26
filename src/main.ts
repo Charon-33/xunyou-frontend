@@ -7,12 +7,8 @@ import 'vant/lib/index.css';
 import '../global.css';
 import { Uploader } from 'vant';
 import { Swipe, SwipeItem } from 'vant';
-import "@icon-park/vue-next/styles/index.css";
 
 import '@purge-icons/generated'
-
-import MakeitCaptcha from 'makeit-captcha'
-import 'makeit-captcha/dist/captcha.min.css'
 
 const app = createApp(App);
 app.use(Vant);
@@ -27,6 +23,5 @@ app.use(router);
 app.use(Uploader);
 app.use(Swipe);
 app.use(SwipeItem);
-app.use(MakeitCaptcha)
 
 app.mount('#app')

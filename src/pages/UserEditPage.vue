@@ -27,10 +27,16 @@
             </div>
         </div>
         <div v-if="editUser.editName === '密码'" style="margin: 10px;">
-            <van-field v-model="oldPwd" label="原密码：" type="password" placeholder="请输入原密码" @change="conOldPwd"/>
-            <van-field v-model="newPwd" label="新密码：" type="password" placeholder="请输入新密码"/>
+            <van-field v-model="oldPwd" label="原密码：" type="password" placeholder="请输入原密码" @change="conOldPwd"
+                       :rules="[{ required: true, message: '请输入原密码' }]"
+            />
+            <van-field v-model="newPwd" label="新密码：" type="password" placeholder="请输入新密码"
+                       :rules="[{ required: true, message: '请输入新密码' }]"
+            />
             <van-field v-model="conNewPwd" label="确认新密码：" type="password" placeholder="请再次输入新密码"
-                       @change="fun_conNewPwd"/>
+                       @change="fun_conNewPwd"
+                       :rules="[{ required: true, message: '请再次输入新密码' }]"
+            />
         </div>
         <div style="margin: 16px;" v-if="editUser.editName !== '标签'">
             <div v-if="editUser.editName === '密码'">
@@ -38,7 +44,7 @@
                     忘记原密码？
                 </van-button>
             </div>
-            <van-button round block :disabled = noConfirm type="primary" native-type="submit">
+            <van-button round block :disabled=noConfirm type="primary" native-type="submit">
                 确认
             </van-button>
         </div>
@@ -90,15 +96,20 @@ const conOldPwd = () => {
     if (oldPwd.value !== editUser.value.currentValue) {
         Toast.fail('原密码输入错误！');
         noConfirm.value = true
-    }else{
+    } else {
         noConfirm.value = false
     }
 }
 const fun_conNewPwd = () => {
+    if (conNewPwd.value.length < 8) {
+        Toast.fail('密码不能小于8位');
+        noConfirm.value = true
+        return
+    }
     if (newPwd.value !== conNewPwd.value) {
         Toast.fail('两次新密码输入不一致！');
         noConfirm.value = true
-    }else if(oldPwd.value === editUser.value.currentValue){
+    } else if (oldPwd.value === editUser.value.currentValue) {
         noConfirm.value = false
     }
 }

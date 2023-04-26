@@ -31,13 +31,16 @@
         </template>
     </van-field>
 
-    <van-field v-model="newPwd" type="password" placeholder="请输入新密码">
+    <van-field v-model="newPwd" type="password" placeholder="请输入新密码"
+               :rules="[{ required: true, message: '请输入新密码' }]"
+    >
         <template #button>
             <span class="iconify" data-icon="mdi:password-outline"></span>
         </template>
     </van-field>
     <van-field v-model="conNewPwd" type="password" placeholder="请再次输入新密码"
                @change="fun_conNewPwd"
+               :rules="[{ required: true, message: '请再次输入新密码' }]"
     >
         <template #button>
             <span class="iconify" data-icon="mdi:password-check-outline"></span>
@@ -98,6 +101,11 @@ const conEmail = () => {
     }
 }
 const fun_conNewPwd = () => {
+    if(conNewPwd.value.length < 8){
+        Toast.fail('密码不能小于8位');
+        noConfirm.value = true
+        return
+    }
     if (newPwd.value !== conNewPwd.value) {
         Toast.fail('两次新密码输入不一致！');
         noConfirm.value = true
@@ -117,6 +125,7 @@ const fun_isCorrectCode = async () => {
 }
 
 const submit = async () => {
+
     if (isCorrectCode.value === "true") {
         // 验证码正确时运行
         const res2 = await myAxios.post('/user/update?opt=1', {
