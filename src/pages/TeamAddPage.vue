@@ -108,7 +108,7 @@ const onSubmit = async () => {
         // });
         router.back()
     } else {
-        Toast.success('添加失败');
+        Toast.fail('添加失败，' + res.description);
     }
 }
 </script>
