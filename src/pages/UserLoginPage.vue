@@ -51,6 +51,11 @@
                 登录
             </van-button>
         </div>
+
+        <van-cell-group inset>
+            <van-cell title="测试账号" value="1935496654@qq.com" />
+            <van-cell title="密码" value="12345678" />
+        </van-cell-group>
     </van-form>
 </template>
 
@@ -67,8 +72,8 @@ const router = useRouter();
 // 用于获取页面信息
 const route = useRoute();
 
-const userEmail = ref('');
-const userPassword = ref('');
+const userEmail = ref('1935496654@qq.com');
+const userPassword = ref('12345678');
 const checkCode = ref('');
 let isCorrectCode = ref('false');
 
